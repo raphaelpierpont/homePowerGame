@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+#container {
+	width: 800px
+	margin: 0 auto;
+}
+#slider { margin: 10px; 
+		float: left;
+}
+#huis { float:left;
+	width: 700px
+}    
+.img {
+margin: 15px;
+position:absolute;
+left:0px;
+top:0px;
+}
+.uit {
+background-color: #666;
+}
+.aan {
+background-color: #FFF;
+}
+.wel {
+opacity: 1;
+filter: alpha(opacity = 100);
+}
+.niet {
+opacity: 0;
+filter: alpha(opacity = 0);
+}
+    </style>
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+</head>
+<script>
+var vermogens = { 
+	'washok': [100],
+	'woonkamer': [100],
+	'kamer2': [100],
+	'kamer3': [100],
+	'keuken': [100],
+	'toilet1': [100],
+	'toilet2': [100],
+	'tvkamer': [100],
+	'balkon': [100],
+	'closet1': [100],
+	'eethoek': [100],
+	'ingang': [100],
+	'kamer1': [100],
+	'badkamer1': [100],
+	'v32': [100],
+	'garage': [100],
+	'p00': [100]
+};
+var lasten = {
+	'washok': [false],
+	'woonkamer': [false],
+	'kamer2': [false],
+	'kamer3': [false],
+	'keuken': [false],
+	'toilet1': [false],
+	'toilet2': [false],
+	'tvkamer': [false],
+	'balkon': [false],
+	'closet1': [false],
+	'eethoek': [false],
+	'ingang': [false],
+	'kamer1': [false],
+	'badkamer1': [false],
+	'v32': [false],
+	'garage': [false],
+	'p00': [false]	
+};
+function update(input){
+		val = input;
+		$( "#slider" ).slider(  'value', val  )
+}
+function change(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val + parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+}
+function add(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val + parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+}
+function rem(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val - parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+}
+function tog(input){
+	var status = lasten[input.value][0];
+	var w;
+	if(status == false){
+		w = vermogens[input.value][0];
+		lasten[input.value][0] = true;
+		add(w);
+	$(this).toggleClass("uit");
+	}
+	if(status == true){
+		w = vermogens[input.value][0];
+		lasten[input.value][0] = false;
+		rem(w);
+	$(this).toggleClass("aan");
+	}
+}
+function togg(input){
+	var status = lasten[input.id][0];
+	var w;
+	if(status == false){
+		w = vermogens[input.id][0];
+		lasten[input.id][0] = true;
+		add(w);
+	$(input).toggleClass("wel");
+$(input).toggleClass("niet");
+	}
+	if(status == true){
+		w = vermogens[input.id][0];
+		lasten[input.id][0] = false;
+		rem(w);
+$(input).toggleClass("wel");
+	$(input).toggleClass("niet");
+	}
+}
+function toggle(input){
+	var target = input.name;
+	var status = lasten[target][0];
+	var w;
+	if(status == false){
+		w = vermogens[target][0];
+		lasten[target][0] = true;
+		add(w);
+		$(input).toggleClass("wel");
+		$(input).toggleClass("niet");
+	}
+	if(status == true){
+		w = vermogens[target][0];
+		lasten[target][0] = false;
+		rem(w);
+		$(input).toggleClass("wel");
+		$(input).toggleClass("niet");
+	}
+}
+</script>
+<body>
+<div id="container">
+
+<div id="huis"> 
+<map name="Map" id="Map">
+  <area shape="rect" coords="508,155,669,396" name="Tgarage" title="Garage" onClick="toggle(garage)" >
+  <area shape="rect" coords="538,122,589,151" onClick="toggle(toilet1)">
+  <area shape="rect" coords="504,37,591,151" onClick="toggle(badkamer1)">
+  <area shape="rect" coords="376,56,505,199" onClick="toggle(kamer1)">
+  <area shape="rect" coords="374,304,506,399" onClick="toggle(kamer2)">
+  <area shape="rect" coords="64,306,193,399"onClick="toggle(kamer3)">
+  <area shape="rect" coords="193,371,489,457" onClick="toggle(balkon)">
+  <area shape="rect" coords="200,277,300,384" onClick="toggle(tvkamer)">
+  <area shape="rect" coords="74,215,130,306" onClick="toggle(toilet2)">
+  <area shape="rect" coords="126,133,256,244" onClick="toggle(keuken)">
+  <area shape="rect" coords="147,32,253,96" onClick="toggle(eethoek)">
+  <area shape="rect" coords="403,205,505,244" onClick="toggle(closet1)">
+  <area shape="rect" coords="403,244,504,272" onClick="toggle(washok)">
+  <area shape="rect" coords="269,89,378,207" onClick="toggle(woonkamer)">
+  <area shape="rect" coords="370,273,485,305" onClick="toggle(ingang)">
+  <area shape="rect" coords="303,208,376,373" onClick="toggle(ingang)">
+  <area shape="rect" coords="229,250,305,279" onClick="toggle(ingang)">
+</map>
+  <p>
+<img src="gfx/top.png" usemap="#Map" style="z-index:0" class="img">
+<img src="gfx/huis-uit.jpg" style="z-index:-999" class="img">
+<img src="gfx/garage.png" border="0" name="garage" class="img niet" style="z-index:-998">
+<img src="gfx/badkamer1.png" border="0" name="badkamer1" class="img niet" style="z-index:-998">
+<img src="gfx/kamer1.png" border="0" name="kamer1" class="img niet" style="z-index:-998">
+<img src="gfx/ingang.png" border="0" name="ingang" class="img niet" style="z-index:-998">
+<img src="gfx/eethoek.png" border="0" name="eethoek" class="img niet" style="z-index:-998">
+<img src="gfx/closet1.png" border="0" name="closet1" class="img niet" style="z-index:-998">
+<img src="gfx/balkon.png" border="0" name="balkon" class="img niet" style="z-index:-998">
+<img src="gfx/tvkamer.png" border="0" name="tvkamer" class="img niet" style="z-index:-998">
+<img src="gfx/toilet2.png" border="0" name="toilet2" class="img niet" style="z-index:-998">
+<img src="gfx/toilet1.png" border="0" name="toilet1" class="img niet" style="z-index:-998">
+<img src="gfx/keuken.png" border="0" name="keuken" class="img niet" style="z-index:-998">
+<img src="gfx/kamer2.png" border="0" name="kamer2" class="img niet" style="z-index:-998">
+<img src="gfx/kamer3.png" border="0" name="kamer3" class="img niet" style="z-index:-998">
+<img src="gfx/woonkamer.png" border="0" name="woonkamer" class="img niet" style="z-index:-998">
+<img src="gfx/washok.png" border="0" name="washok" class="img niet" style="z-index:-998">
+  </p>
+<!--   <table width="561" height="529" border="1">
+    <tr>
+      <td><input type="button" class="uit" value="v00"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v01"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v02"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v03"  onClick="tog(this)"></td>
+    </tr>
+    <tr>
+      <td><input type="button" class="uit" value="v10"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v11"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v12"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v13"  onClick="tog(this)"></td>
+    </tr>
+    <tr>
+      <td><input type="button" class="uit" value="v20"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v21"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v22"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v23"  onClick="tog(this)"></td>
+    </tr>
+    <tr>
+      <td><input type="button" class="uit" value="v30"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v31"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v32"  onClick="tog(this)"></td>
+      <td><input type="button" class="uit" value="v33"  onClick="tog(this)"></td>
+    </tr>
+</table> -->
+</div>
+
+<div id="slider"></div>
+<script>
+$( "#slider" ).slider( {
+	orientation: "vertical",
+	disabled: true,
+	value: 0,
+	min: 0,
+	max: 2000,
+	animate: "slow",
+	range: "min"
+	} );
+</script>
+
+</div> <input type="hidden" id="waarde" onChange="update(this.value)" value="0">
+</body>
+</html>

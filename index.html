@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+#container {
+	width: 800px
+	margin: 0 auto;
+}
+#slider { margin: 10px; 
+height: 460px;
+		float: left;
+}
+.ui-widget-header {
+	background-color: lime;
+}
+.groen {
+	background-color: green;
+}
+.oranje {
+	background-color: orange;
+}
+.rood {
+	background-color: red;
+}
+#meter {
+	height: 15px;
+	width: 95px;
+	float: left;
+	margin: 2px;
+	background-color: orange;
+}
+.stroom {
+	background-image: url(gfx/pbar-ani.gif);
+	background-color: red;
+}
+#kast {
+	float: left;
+	padding: 5px;
+	width: 100px;
+	height: 180px;
+	background-color: #CFCFCF;
+	border-bottom: 15px solid #FFFFFF;
+	border-right: 15px solid #FFFFFF;
+}
+#kast input{
+	width: 55px;
+}
+#kast img {
+	margin: 5px 25px;
+}
+#huis { float:left;
+	width: 700px
+}    
+.img {
+margin: 15px;
+position:absolute;
+left:0px;
+top:0px;
+}
+.uit {
+background-color: #666;
+}
+.aan {
+background-color: #FFF;
+}
+.wel {
+opacity: 1;
+filter: alpha(opacity = 100);
+}
+.niet {
+opacity: 0;
+filter: alpha(opacity = 0);
+}
+#bericht {
+	padding: 10px;
+	border: 5px solid #999;
+	float: left;
+	
+}
+    </style>
+    <!--<script src="http://code.jquery.com/jquery-1.8.2.js"></script>-->
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="jquery-ui-1.8.20.custom.min.js"></script>
+    <!--<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>-->
+</head>
+<script>
+var vermogens = { 
+// 'label': [vermogen,false,aan geluid,uitgeluid],
+	'washok': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'woonkamer': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer2': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer3': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'keuken': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'toilet1': [40,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'toilet2': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'tvkamer': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'balkon': [80,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'closet1': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'eethoek': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'ingang': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer1': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'badkamer1': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'boom': [0,false],
+	'tv': [0,false,'sounds/darthvader_yourfather.wav','sounds/laser-01.wav'],
+	'kraan': [40,false,'sounds/running-water-01.wav','sounds/running-water-01.wav'],
+	'flush': [0,false,'sounds/sink-empty-01.wav','sounds/sink-empty-01.wav'],
+	'douche': [0,false,'sounds/rain-medium-03.wav','sounds/rain-medium-03.wav'],
+	'garage': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'a1': [1000,false,'sounds/electronics017.wav'],
+	'a2': [2500,false,'sounds/fan-02.wav'],
+	'a3': [1000,false,'sounds/electronics017.wav'],
+	'a4': [1000,false,'sounds/electronics017.wav'],
+	'auto': [0,false,'sounds/beepbeep-01.wav','sounds/car-ignition-01.wav']
+};
+	var zekStatus = "off";
+function playSound(soundfile){
+ document.getElementById("dummy").innerHTML=
+ "<embed src=\""+soundfile+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" />";
+ }
+/*function update(input){
+		val = input;
+		$( "#slider" ).slider(  'value', val  );
+		$(document.getElementsByClassName("ui-accordion-header")).toggleClass("oranje");
+}*/
+function adjustColor() {
+	var val =	document.getElementById("waarde");
+	if(val.value > 0){
+		$( "#slider > div" ).removeClass("rood");
+		$( "#slider > div").removeClass("oranje");
+	}
+	if(val.value > 3000){
+		$( "#slider > div").removeClass("rood");
+		$( "#slider > div").toggleClass("oranje");
+		//document.getElementsByClassName("ui-widget-header").style.backgroundColor="orange";
+	}
+	if(val.value > 5000){
+		$( "#slider > div").removeClass("oranje");
+		$( "#slider > div").toggleClass("rood");
+	}
+}/*
+function change(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val + parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+		alert(val);
+}*/
+function add(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val + parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+		adjustColor();
+		
+}
+function rem(input){
+		var val = parseInt(document.getElementById("waarde").value);
+		val = val - parseInt(input);
+		document.getElementById("waarde").value= val;
+		$( "#slider" ).slider(  'value', val  );
+		adjustColor();
+}
+function bos(){
+	vermogens = { 
+// 'label': [vermogen,false,aan geluid,uitgeluid],
+	'washok': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'woonkamer': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer2': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer3': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'keuken': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'toilet1': [40,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'toilet2': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'tvkamer': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'balkon': [80,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'closet1': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'eethoek': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'ingang': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'kamer1': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'badkamer1': [60,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'garage': [75,false,'sounds/aan_click.mp3','sounds/uit_click.mp3'],
+	'a1': [1000,false,'sounds/electronics017.wav'],
+	'a2': [2500,false,'sounds/fan-02.wav'],
+	'a3': [1000,false,'sounds/electronics017.wav'],
+	'a4': [1000,false,'sounds/electronics017.wav'],
+	'auto': [0,false,'sounds/beepbeep-01.wav','sounds/car-ignition-01.wav'],
+	'boom': [0,false],
+	'tv': [0,false,'sounds/darthvader_yourfather.wav','sounds/laser-01.wav'],
+	'kraan': [40,false,'sounds/running-water-01.wav','sounds/running-water-01.wav'],
+	'flush': [0,false,'sounds/sink-empty-01.wav','sounds/sink-empty-01.wav'],
+	'douche': [0,false,'sounds/rain-medium-03.wav','sounds/rain-medium-03.wav']
+	};
+	//for(var i; i<20; i++){
+		$("#a1").addClass("niet");
+		$("#a2").addClass("niet");
+		$("#a3").addClass("niet");
+		$("#a4").addClass("niet");
+		$("#kamer1").addClass("niet");
+		$("#kamer2").addClass("niet");
+		$("#kamer3").addClass("niet");
+		$("#washok").addClass("niet");
+		$("#woonkamer").addClass("niet");
+		$("#tvkamer").addClass("niet");
+		$("#balkon").addClass("niet");
+		$("#keuken").addClass("niet");
+		$("#toilet1").addClass("niet");
+		$("#toilet2").addClass("niet");
+		$("#badkamer1").addClass("niet");
+		$("#ingang").addClass("niet");
+		$("#eethoek").addClass("niet");
+		$("#closet1").addClass("niet");
+		$("#garage").addClass("niet");
+	//}
+	document.getElementById("waarde").value=0;
+	$( "#slider" ).slider(  'value', 0  );
+	playSound('sounds/laser-01.wav');
+}
+function togg(input){
+	var status = vermogens[input.id][1];
+	var w;
+	if(status == false){
+		w = vermogens[input.id][0];
+		vermogens[input.id][1] = true;
+		add(w);
+	$(input).toggleClass("wel");
+$(input).toggleClass("niet");
+	}
+	if(status == true){
+		w = vermogens[input.id][0];
+		vermogens[input.id][1] = false;
+		rem(w);
+$(input).toggleClass("wel");
+	$(input).toggleClass("niet");
+	}
+}
+function toggle(input){
+	var target = input.name;
+	if(zekStatus == "off"){		
+		var status = vermogens[target][1];	
+		var w;
+		if(status == false){
+			var sound = vermogens[target][2];
+			w = vermogens[target][0];
+			if(zekStatus =="off"){
+				vermogens[target][1] = true;
+				add(w);
+				$(input).toggleClass("wel");
+				$(input).toggleClass("niet");
+				playSound(sound);
+			}
+			if(parseInt(document.getElementById("waarde").value) > 6000){
+			zekering(document.getElementById("fuse"));
+			//bos();
+		}
+		}
+		if(status == true){
+			var sound = vermogens[target][3];
+			w = vermogens[target][0];
+			if(zekStatus =="off"){
+				vermogens[target][1] = false;
+				rem(w);
+				$(input).toggleClass("wel");
+				$(input).toggleClass("niet");
+				playSound(sound);
+			}		
+		}
+			else{
+			var sound = vermogens[target][2];
+			playSound(sound);
+		}
+	}
+	else{
+		if( target == "auto"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "boom"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "kraan"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "kamer1"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "kamer2"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "kamer3"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "washok"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "woonkamer"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "tvkamer"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "balkon"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "keuken"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "toilet1"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "toilet2"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "badkamer1"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "ingang"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "eethoek"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "closet1"){var sound = vermogens[target][2];playSound(sound);}
+		if( target == "garage"){var sound = vermogens[target][2];playSound(sound);}
+		if(	target == "flush"){var sound = vermogens[target][2];playSound(sound);}
+		if(	target == "douche"){var sound = vermogens[target][2];playSound(sound);}
+	}
+}
+function zekering(z){
+	x= document.getElementById("meter");
+	if(zekStatus == "on"){
+		z.src = 'gfx/on.png';
+		zekStatus = "off";
+		$(z).toggleClass("stroom");
+		$(x).toggleClass("stroom");
+	}
+	else {
+		z.src = 'gfx/off.png';
+		zekStatus = "on";
+		$(z).toggleClass("stroom");
+		$(x).toggleClass("stroom");
+		bos();
+	}
+}
+</script>
+<body>
+<div id="container">
+
+<div id="huis"> 
+<map name="Map" id="Map">
+<area shape="rect" coords="193,317,207,365" title="T.V. kijken?" onClick="toggle(tv)">
+  <area shape="circle" coords="166,425,27" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="44,318,20" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="36,347,21" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="42,383,20" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="598,422,17" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="659,420,18" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="629,420,19" title="Bomen" onClick="tog(boom)">
+  <area shape="circle" coords="573,137,8" title="Doorspoelen?" onClick="toggle(flush)">
+  <area shape="circle" coords="113,256,9" title="Doorspoelen?" onClick="toggle(flush)">
+  <area shape="rect" coords="75,287,128,305" title="Kraan" onClick="toggle(kraan)">
+  <area shape="rect" coords="534,101,587,118" title="Kraan" onClick="toggle(kraan)">
+  <area shape="circle" coords="222,163,9" title="Kraan" onClick="toggle(kraan)">
+  <area shape="circle" coords="228,167,8" title="Kraan" onClick="toggle(kraan)">
+  <area shape="rect" coords="537,41,587,67" title="Douche" onClick="toggle(douche)">
+  <area shape="rect" coords="76,219,126,243" title="Douche" onClick="toggle(douche)">
+<area shape="rect" coords="529,182,656,230" title="Auto" onClick="toggle(auto)">
+  <area shape="rect" coords="529,255,661,305" title="Auto" onClick="toggle(auto)">
+  <area shape="rect" coords="547,327,660,377" title="Auto" onClick="toggle(auto)">
+  <area shape="circle" coords="328,287,20" title="Centrale Airco (2,5 kWh)" onClick="toggle(a2)">
+  <area shape="circle" coords="253,133,19" title="Centrale Airco (2,5 kWh)" onClick="toggle(a2)">
+  <area shape="circle" coords="444,134,19" title="Kamer Airco (1 kWh)" onClick="toggle(a1)">
+  <area shape="circle" coords="148,352,18" title="Kamer Airco (1 kWh)" onClick="toggle(a4)">
+  <area shape="circle" coords="420,354,18" title="Kamer Airco (1 kWh)" onClick="toggle(a3)">
+  <area shape="rect" coords="508,155,669,396" title="Garage (75 W)" onClick="toggle(garage)" >
+  <area shape="rect" coords="538,122,589,151" title="Toilet (40W)" onClick="toggle(toilet1)">
+  <area shape="rect" coords="504,37,591,151" title="Badkamer(60W)" onClick="toggle(badkamer1)">
+  <area shape="rect" coords="376,56,505,199" title="Slaapkamer(75W)" onClick="toggle(kamer1)">
+  <area shape="rect" coords="374,304,506,399" title="Slaapkamer(75W)" onClick="toggle(kamer2)">
+  <area shape="rect" coords="64,306,193,399" title="Slaapkamer(75W)" onClick="toggle(kamer3)">
+  <area shape="rect" coords="193,371,489,457" title="Terras(80w)" onClick="toggle(balkon)">
+  <area shape="rect" coords="200,277,300,384" title="TV-kamer (60W)" onClick="toggle(tvkamer)">
+  <area shape="rect" coords="74,215,130,306" title="Bad/Toilet (60W)" onClick="toggle(toilet2)">
+  <area shape="rect" coords="126,133,256,244" title="Keuken(60W)" onClick="toggle(keuken)">
+  <area shape="rect" coords="147,32,253,96" title="Eethoek(60W)" onClick="toggle(eethoek)">
+  <area shape="rect" coords="403,205,505,244" title="Inloopkast (60W)" onClick="toggle(closet1)">
+  <area shape="rect" coords="403,244,504,272" title="Washok (60W)" onClick="toggle(washok)">
+  <area shape="rect" coords="269,89,378,207" title="Woonkamer (60W)" onClick="toggle(woonkamer)">
+  <area shape="rect" coords="370,273,485,305" title="Gang (60W)" onClick="toggle(ingang)">
+  <area shape="rect" coords="303,208,376,373" title="Gang (60W)" onClick="toggle(ingang)">
+  <area shape="rect" coords="229,250,305,279" title="gang (60W)" onClick="toggle(ingang)">  
+</map>
+  <p>
+<img src="gfx/top.png" usemap="#Map" style="z-index:0" class="img">
+<img src="gfx/huis-uit.jpg" style="z-index:-9" class="img">
+<img src="gfx/garage.png" border="0" name="garage" id="garage" class="img niet" style="z-index:-8">
+<img src="gfx/balkon.png" border="0" name="balkon" id="balkon" class="img niet" style="z-index:-8">
+<img src="gfx/badkamer1.png" border="0" name="badkamer1" id="badkamer1" class="img niet" style="z-index:-8">
+<img src="gfx/kamer1.png" border="0" name="kamer1" id="kamer1" class="img niet" style="z-index:-8">
+<img src="gfx/ingang.png" border="0" name="ingang" id="ingang" class="img niet" style="z-index:-8">
+<img src="gfx/eethoek.png" border="0" name="eethoek" id="eethoek" class="img niet" style="z-index:-8">
+<img src="gfx/closet1.png" border="0" name="closet1" id="closet1" class="img niet" style="z-index:-8">
+<img src="gfx/tvkamer.png" border="0" name="tvkamer" id="tvkamer" class="img niet" style="z-index:-8">
+<img src="gfx/toilet2.png" border="0" name="toilet2" id="toilet2" class="img niet" style="z-index:-8">
+<img src="gfx/toilet1.png" border="0" name="toilet1" id="toilet1" class="img niet" style="z-index:-8">
+<img src="gfx/keuken.png" border="0" name="keuken" id="keuken" class="img niet" style="z-index:-8">
+<img src="gfx/kamer2.png" border="0" name="kamer2" id="kamer2" class="img niet" style="z-index:-8">
+<img src="gfx/kamer3.png" border="0" name="kamer3" id="kamer3" class="img niet" style="z-index:-8">
+<img src="gfx/woonkamer.png" border="0" name="woonkamer" id="woonkamer" class="img niet" style="z-index:-8">
+<img src="gfx/washok.png" border="0" name="washok" id="washok" class="img niet" style="z-index:-8">
+<img src="gfx/aircos.png" border="0" name="aircos" class="img" style="z-index:-7">
+<img src="gfx/a4.png" border="0" name="a4" id="a4" class="img niet" style="z-index:-6">
+<img src="gfx/a3.png" border="0" name="a3" id="a3" class="img niet" style="z-index:-6">
+<img src="gfx/a2.png" border="0" name="a2" id="a2" class="img niet" style="z-index:-6">
+<img src="gfx/a1.png" border="0" name="a1" id="a1" class="img niet" style="z-index:-6">
+<img name="auto" >
+<img name="tv" >
+<img name="kraan" >
+<img name="flush" >
+<img name="douche" >
+<img name="boom" >
+  </p>
+</div>
+
+<div id="slider"></div>
+<script>
+$( "#slider" ).slider( {
+	orientation: "vertical",
+	disabled: true,
+	value: 0,
+	min: 0,
+	max: 7000,
+	animate: "slow",
+	range: "min"
+	} );
+</script>
+
+</div> <div id="kast"><input type="text" id="waarde" onChange="update(this.value)" value="0">Wh<span id="meter" class="stroom"></span>
+<img src="gfx/on.png" id="fuse" onClick="zekering(this);" width="50" height="100"></div>
+<div id="bericht"><h2>Besparen</h2>Bewust met energie omgaan heeft voordelen voor u en voor het milieu. Het voordeel voor u is, dat het kan het leiden tot een aanzienlijke verlaging van uw maandelijkse energie rekening. Vaak realiseert men zich niet hoeveel energie bepaalde apparaten verbruiken; denkt u aan een airconditioning. Bewust omgaan met energie kan goed samen gaan met het behoud van comfort en luxe in uw huis. Klik op de foto om te zien hoeveel energie de appataten gebruiken. Wat moet allemaal aan zijn om 6000 Wh te halen. Begin vandaag nog met besparen!</div>
+<span id="dummy"></span></body>
+</html>
